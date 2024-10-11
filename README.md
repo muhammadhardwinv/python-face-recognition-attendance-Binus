@@ -1,3 +1,4 @@
+---
 # Leveraging Face Recognition Technology for Efficient Attendance Monitoring in Bina Nusantara (Binus) University | 2024
 
 ## Overview
@@ -61,4 +62,3 @@ This project is focused on implementing a robust and efficient attendance monito
 If you're interested in contributing to the project, feel free to open an issue or submit a pull request. Contributions are highly appreciated!
 ---
 
-Let me know if you need any adjustments or additional sections!
