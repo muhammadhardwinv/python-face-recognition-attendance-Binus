@@ -1,10 +1,3 @@
-readme
-
-
-Here is a draft for your `README.md` for GitHub based on the provided title:
-
----
-
 # Leveraging Face Recognition Technology for Efficient Attendance Monitoring in Bina Nusantara (Binus) University | 2024
 
 ## Overview
