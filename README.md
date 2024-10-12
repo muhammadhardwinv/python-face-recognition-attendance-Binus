@@ -57,8 +57,5 @@ This project is focused on implementing a robust and efficient attendance monito
 - **Cloud Storage**: Implement cloud-based storage to make attendance records more accessible.
 - **Integration with Existing University Systems**: Sync the attendance data with university management systems like LMS or ERP.
 
-## Contributing
-
-If you're interested in contributing to the project, feel free to open an issue or submit a pull request. Contributions are highly appreciated!
 ---
 
