@@ -6,6 +6,8 @@ import numpy as np
 from datetime import datetime, timedelta
 import firebase_admin
 from firebase_admin import credentials, initialize_app, db, storage
+from AddDataToData import data
+# from AddDataToData import LectureData
 
 if not firebase_admin._apps:
     cred = credentials.Certificate("serviceAccKey.json")
@@ -19,9 +21,9 @@ face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
 # Set up the camera
 cam = cv2.VideoCapture(0)
-# These settings are for the live feed display (480p)
-cam.set(3, 720)  # Set width to 720 (480p)
-cam.set(4, 480)  # Set height to 480 (480p)
+
+cam.set(3, 1280)
+cam.set(4, 720)
 fps = 30
 cam.set(cv2.CAP_PROP_FPS, 30)
 
@@ -94,6 +96,7 @@ while True:
         if matches[matchIndex]:
             recognized_id = peopleID[matchIndex]
             now = datetime.now()
+            recognized_name = data[recognized_id]['name']
 
             if recognized_id not in recognized_faces_set:
                 print(f"New Known Face Detected: {recognized_id}")
@@ -101,25 +104,28 @@ while True:
                 # Record entry time for the recognized face
                 face_times[recognized_id] = {'entry': now, 'exit': None}
                 recognized_faces_set.add(recognized_id)
+                recognized_faces_set.add(recognized_name)
                 recognized_faces_counter += 1
                 print(
-                    f"{recognized_id} entered the room at: {now.strftime('%Y-%m-%d %H:%M:%S')}")
+                    f"{recognized_id} - {recognized_name} entered the room at: {now.strftime('%Y-%m-%d %H:%M:%S')}")
+
+                folder_name = f"{now.strftime('%Y-%m-%d %H:%M')} - {recognized_id}"
 
                 # Capture the image for the recognized face (cropping it)
                 top, right, bottom, left = faceLocation
-                face_image = img[top*2:bottom*2, left *
-                                 2:right*2]  # Resize back to original
+                face_image = img
                 face_image_resized = cv2.resize(
-                    face_image, (720, 480))  # Resize to 480p
+                    face_image, (1280, 720))  # Resize to 480p
 
                 # Upload the entry image to Firebase storage and get the URL
                 entry_image_url = upload_image_to_firebase(
                     face_image_resized, recognized_id, "entry")
 
                 # Adding entry time and image URL to the Database
-                db_ref = db.reference("timestamps")
+                db_ref = db.reference(f"attendance/{folder_name}")
                 db_ref.push({
                     'face_id': recognized_id,
+                    'face_name': recognized_name,
                     'entry_time': now.strftime('%Y-%m-%d %H:%M:%S'),
                     'exit_time': None,
                     'entry_image_url': entry_image_url,
@@ -142,12 +148,12 @@ while True:
 
             # Log the exit time
             print(
-                f"Face {face_id} exited the room at: {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
+                f"Face {face_id} - {recognized_name} exited the room at: {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
 
             # Capture an exit image
             _, img_exit = cam.read()
             exit_image_resized = cv2.resize(
-                img_exit, (720, 480))  # Resize to 480p
+                img_exit, (640, 480))  # Resize to 480p
 
             # Upload the exit image to Firebase storage and get the URL
             exit_image_url = upload_image_to_firebase(
@@ -158,15 +164,16 @@ while True:
             duration_in_seconds = (current_time - entry_time).total_seconds()
 
             # Determine if the person is late or on time (threshold: 10 seconds)
-            attendance_status = "ON TIME" if duration_in_seconds >= 100 else "LATE"
+            attendance_status = "ON TIME" if duration_in_seconds >= 10 else "LATE"
 
             # Push exit time, image URL, duration, and attendance status to the database
             db_ref.push({
-                'face_id': face_id,
-                'exit_time': current_time.strftime("%Y-%m-%d %H:%M:%S"),
-                'exit_image_url': exit_image_url,
-                'duration_in_seconds': duration_in_seconds,
-                'attendance_status': attendance_status
+                'face_id': recognized_id,
+                'face_name': recognized_name,
+                'entry_time': now.strftime('%Y-%m-%d %H:%M:%S'),
+                'exit_time': None,
+                'entry_image_url': entry_image_url,
+                'exit_image_url': None
             })
 
             # Remove face from face_presence to stop tracking
