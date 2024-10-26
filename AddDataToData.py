@@ -9,24 +9,40 @@ firebase_admin.initialize_app(cred, {
 
 })
 ref = db.reference('LectureData')
+
+ref = db.reference('Lecture Data')
+
 data = {
     "19980101": {
         "name": "John Doe",
-        "attendance_status": []
+        "attendance": "Absent",
+        "occupation": "Director",
+        "last_attendance_time": "2023-10-06 07:54:32",
+        "active": "inactive",
     },
     "19980102": {
         "name": "Jane Doe",
-        "attendance_status": []
+        "attendance": "Absent",
+        "occupation": "Engineer",
+        "last_attendance_time": "2024-10-03 08:54:32",
+        "active": "active",
     },
     "20000514": {
         "name": "M Hardwin",
-        "attendance_status": []
+        "attendance": "Present",
+        "occupation": "Programmer Intern",
+        "last_attendance_time": "2024-10-07 07:20:25",
+        "active": "active",
     },
     "20010102": {
         "name": "Shannon Smith",
-        "attendance_status": []
+        "attendance": "Absent",
+        "occupation": "Analyst Intern",
+        "last_attendance_time": "2024-10-07 09:30:25",
+        "active": "Active",
     }
 }
+
 
 for key, value in data.items():
     ref.child(key).set(value)
