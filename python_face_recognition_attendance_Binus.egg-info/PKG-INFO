@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: python-face-recognition-attendance-Binus
+Version: 0.1
+Summary: A face recognition-based attendance system for Binus
+Author: Muhammad Hardwin Variansyah
+Requires-Dist: opencv-python
+Requires-Dist: firebase-admin
+Requires-Dist: face-recognition

@@ -1,0 +1,3 @@
+opencv-python
+firebase-admin
+face-recognition

@@ -11,7 +11,6 @@ from firebase_admin import credentials, initialize_app, db, storage
 from AddDataToData import data
 from concurrent.futures import ThreadPoolExecutor
 
-
 if not firebase_admin._apps:
     cred = credentials.Certificate("serviceAccKey.json")
     firebase_admin.initialize_app(cred, {
@@ -22,14 +21,17 @@ if not firebase_admin._apps:
 # Load the cascade
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-# Set up the camera
-cam = cv2.VideoCapture(0)
+# Set up the video capture with a video file
+# Replace with your video file path
+video_path = 'Video/How does facial recognition work_.mp4'
+cam = cv2.VideoCapture(video_path)
 cam.set(3, 1280)
 cam.set(4, 720)
 fps = 30
 cam.set(cv2.CAP_PROP_FPS, 30)
 
 recognized_faces_counter = 0
+
 # Load and process the encoding file
 file = open('EncodeFile.p', 'rb')
 peopleFaceListWithId = pickle.load(file)
@@ -49,7 +51,8 @@ bucket = storage.bucket()
 
 def upload_image_to_firebase(image, face_id, event_type):
     now = datetime.now()
-    image_filename = f"{face_id}_{event_type}_{now.strftime('%Y%m%d_%H%M%S')}.jpg"
+    image_filename = f"{face_id}_{event_type}_{
+        now.strftime('%Y%m%d_%H%M%S')}.jpg"
 
     # Convert image to file-like object
     image_path = f"temp_images/{image_filename}"
@@ -74,12 +77,17 @@ def encode_faces(frame):
 
 
 while True:
-    _, img = cam.read()
+    # Read a frame from the video
+    ret, img = cam.read()
+    if not ret:
+        print("End of video or cannot read the video file.")
+        break  # Exit the loop if the video ends
+
     img_copy = img.copy()
 
     # Start timer for total latency measurement
     start_total_time = time.perf_counter()
-    # Capture frame from webcam (Webcam Capture Latency)
+    # Capture frame from video (Video Capture Latency)
     start_capture_time = time.perf_counter()
     capture_latency = time.perf_counter() - start_capture_time
 
@@ -114,7 +122,7 @@ while True:
 
     cv2.imshow('Webcam', img)
     recognized_name = None
-    # Compare image and camera
+    # Compare image and video frame
     for encodeFace, faceLocation in zip(encodeCurrentFrame, faceCurrentFrame):
         matches = face_recognition.compare_faces(
             peopleFaceList, encodeFace, tolerance=0.5)
@@ -137,7 +145,8 @@ while True:
                 print(
                     f"{recognized_id} - {recognized_name} entered the room at: {now.strftime('%Y-%m-%d %H:%M:%S')}")
 
-                folder_name = f"{now.strftime('%Y-%m-%d %H:%M')} - {recognized_id}"
+                folder_name = f"{now.strftime(
+                    '%Y-%m-%d %H:%M')} - {recognized_id}"
 
                 # Calculate the total duration the person has been in the frame
                 entry_time = face_times[recognized_id]['entry']
@@ -168,10 +177,9 @@ while True:
             face_presence[recognized_id] = now
 
         else:
-
             recognized_name = "Unknown"
 
-        # Handle exit times for faces that are no longer visible
+    # Handle exit times for faces that are no longer visible
     current_time = datetime.now()
     for face_id in list(face_presence.keys()):
         last_seen_time = face_presence[face_id]

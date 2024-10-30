@@ -8,13 +8,11 @@ firebase_admin.initialize_app(cred, {
     'storageBucket': 'realtimerecognizer-ac6e4.appspot.com'
 
 })
-ref = db.reference('LectureData')
-
 ref = db.reference('Lecture Data')
 
 data = {
     "19980101": {
-        "name": "John Doe",
+        "name": "John Cena",
         "attendance": "Absent",
         "occupation": "Director",
         "last_attendance_time": "2023-10-06 07:54:32",
@@ -40,7 +38,14 @@ data = {
         "occupation": "Analyst Intern",
         "last_attendance_time": "2024-10-07 09:30:25",
         "active": "Active",
-    }
+    },
+    "20010103": {
+        "name": "Jaden Smith",
+        "attendance": "Absent",
+        "occupation": "Karate Kid",
+        "last_attendance_time": "2024-10-07 09:30:25",
+        "active": "Active",
+    },
 }
 
 

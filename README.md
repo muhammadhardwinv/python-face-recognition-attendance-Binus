@@ -1,3 +1,5 @@
+Here's a comprehensive README for your GitHub repository:
+
 ---
 
 # Real-Time Face Recognition and Attendance System
