@@ -1,0 +1,5 @@
+opencv-python
+cvzone
+face_recognition
+numpy
+firebase-admin
