@@ -1,5 +1,3 @@
----
-
 # Real-Time Face Recognition and Attendance System
 
 This project implements a real-time face recognition and attendance tracking system using OpenCV, Firebase, and the `face_recognition` library. The system captures video frames from a webcam, detects and recognizes faces, and uploads relevant entry and exit data to Firebase Realtime Database and Storage.
