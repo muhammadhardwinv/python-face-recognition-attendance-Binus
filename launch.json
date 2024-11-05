@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: main",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "console": "integratedTerminal",
+            "args": [],
+            "env": {},
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "",
+            "postDebugTask": "",
+            "python": "python3", // Adjust if needed
+            "console": "integratedTerminal",
+            "output": "${workspaceFolder}/output.log",
+            "envFile": "${workspaceFolder}/.env",
+            "console": "externalTerminal", // Use external terminal for command output
+            "args": [
+                "2>/dev/null"
+            ] // Add this line
+        }
+    ]
+}
